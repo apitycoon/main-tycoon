@@ -1,22 +1,7 @@
 const stringHandler = require('./stringHandler.js');
 const $ = require('jquery');
-let selFunc;
 
 const trgElem = '#api-window';
-
-$(document).ready(function() {
-  $(trgElem).load(function() {
-    $(trgElem).contents().click(function(e) {
-      e.preventDefault();
-      selFunc = genOutput(e.target);
-      selFunc('current');
-
-      $('#shorten').click(() => onShorten());
-      $('#lengthen').click(() => onLengthen());
-
-    })
-  })
-});
 
 function genOutput(target) {
 

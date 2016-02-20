@@ -17,7 +17,6 @@ function getPathTo(element) {
 
 function strParse(str) {
   str = getPathTo(str);
-  console.log(str);
   var jqArr = str.split('/');
   var id = jqArr.shift();
   jqArr.unshift('class("undefined")'); //remove once class added to output function

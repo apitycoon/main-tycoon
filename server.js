@@ -50,22 +50,18 @@ app.get('/blank.html', function(req, res) {
 app.post('/apitest', function(req, res) {
   var string = req.body.data;
   var url = req.body.url;
-  
-  console.log(req.body);
-  
+
   var temp = {};
-  
+
   temp.name = 'test';
   temp.string = string;
   temp.text = true;
   temp.attr = '';
-  
-  console.log(string);
-  
+
   cheerio(url, [temp]).then(function(data) {
     res.send(JSON.stringify(data));
   });
-  
+
 });
 
 app.post('/apireqpost/post.stf', function(req, res, next) {
@@ -110,6 +106,21 @@ app.get('/tycooned/:id', function(req, res, next) {
     });
   })
 });
+
+app.get('/api/:id', function(req, res) {
+  var id = new ObjectID(req.params.id);
+
+  //get data from mongodb
+  MongoClient(function(err, db) {
+    db.collection('apiCollection').findOne({_id: id}, function(err, result) {
+      var url = result.url;
+      var queries = result.queries;
+      cheerio(url, queries).then(function(data) {
+        res.send(data);
+      });
+    });
+  });
+})
 
 app.get('*', function(req, res, next) {
   res.redirect(req.cookies.website + req.originalUrl);
