@@ -15,22 +15,6 @@ const trgElem = '#api-window';
 // make post request but don't reload page
 $(document).ready(function() {
 
-  $('#submit-post').on('click', function(e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: 'apitest/',
-      type: 'POST',
-      data: {
-        data: selFunc('current'),
-        url: $('#api-location').val()
-      },
-      success: function(data) {
-        alert(data);
-      }
-    })
-  })
-
   $('#api-prevent').on('click', function(e) {
     e.preventDefault();
     $('#api-window').remove();
