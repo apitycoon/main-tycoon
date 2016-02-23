@@ -44,7 +44,7 @@ $(document).ready(function() {
             if (highlight) highlight(null, 'clear');
             highlight = cssHighlight();
             highlight(selFunc('current'), 'initial');
-
+                            
             $('#shorten').click((e) => {
               e.preventDefault();
               outputView.onShorten(selFunc);
