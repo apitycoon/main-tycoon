@@ -15,22 +15,6 @@ const trgElem = '#api-window';
 // make post request but don't reload page
 $(document).ready(function() {
 
-  $('#submit-post').on('click', function(e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: 'apitest/',
-      type: 'POST',
-      data: {
-        data: selFunc('current'),
-        url: $('#api-location').val()
-      },
-      success: function(data) {
-        alert(data);
-      }
-    })
-  })
-
   $('#api-prevent').on('click', function(e) {
     e.preventDefault();
     $('#api-window').remove();
@@ -48,7 +32,7 @@ $(document).ready(function() {
 
           $('#api-window').contents().click(function(e) {
             e.preventDefault();
-
+						console.log('e.target ', e.target);
             selFunc = outputView.genOutput(e.target);
             selFunc('current');
             $('#guiSelector').remove();
@@ -60,7 +44,7 @@ $(document).ready(function() {
             if (highlight) highlight(null, 'clear');
             highlight = cssHighlight();
             highlight(selFunc('current'), 'initial');
-
+                            
             $('#shorten').click((e) => {
               e.preventDefault();
               outputView.onShorten(selFunc);
