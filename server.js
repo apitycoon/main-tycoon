@@ -47,23 +47,6 @@ app.get('/blank.html', function(req, res) {
   res.sendFile(__dirname + '/blank.html');
 })
 
-app.post('/apitest', function(req, res) {
-  var string = req.body.data;
-  var url = req.body.url;
-
-  var temp = {};
-
-  temp.name = 'test';
-  temp.string = string;
-  temp.text = true;
-  temp.attr = '';
-
-  cheerio(url, [temp]).then(function(data) {
-    res.send(JSON.stringify(data));
-  });
-
-});
-
 app.post('/apireqpost/post.stf', function(req, res, next) {
     res.cookie('website', req.body.website);
     res.send();
@@ -115,19 +98,19 @@ app.post('/apisubmit', function(req, res) {
   var url = req.cookies.website;
   var id = new ObjectID(req.cookies.apitycID);
   var queries = req.body;
-  
-  
-  
+
+
+
   MongoClient(function(err, db) {
     db.collection('apiCollection').updateOne({_id: id}, { $set: { url: url, queries: queries}}, function(err, result) {
       // console.log('updated result', result);
       db.close();
     });
   });
-  
+
   res.cookie('apitycID', 'null');
   res.send(id);
-  
+
 });
 
 app.get('/api/:id', function(req, res) {
