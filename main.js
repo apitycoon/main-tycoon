@@ -32,7 +32,7 @@ $(document).ready(function() {
 
           $('#api-window').contents().click(function(e) {
             e.preventDefault();
-
+						console.log('e.target ', e.target);
             selFunc = outputView.genOutput(e.target);
             selFunc('current');
             $('#guiSelector').remove();
