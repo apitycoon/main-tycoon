@@ -41,7 +41,7 @@ var cheerio = {
 		return data;
 	}
 
-}
+};
 
 // sample query objects
 // need to remove html & body elements from the fron of the string

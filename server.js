@@ -122,7 +122,7 @@ app.get('/api/:id', function(req, res) {
       // console.log('found user', result);
       var url = result.url;
       var queries = result.queries;
-      cheerio(url, [queries]).then(function(data) {
+      cheerio.getData(url, [queries]).then(function(data) {
         // console.log(data);
         res.send(data);
       });
