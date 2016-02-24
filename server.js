@@ -1,6 +1,6 @@
 var fs = require('fs');
 var express = require('express');
-var request = require('request');
+//var request = require('request');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var phantom = require('phantom');
@@ -45,12 +45,21 @@ app.get('/', function(req, res) {
 });
 
 app.get('/blank.html', function(req, res) {
+<<<<<<< HEAD
   res.sendFile(__dirname + '/blank.html');
 })
 
 app.post('/apireqpost/post.stf', function(req, res, next) {
     res.cookie('website', req.body.website);
     res.send();
+=======
+	res.sendFile(__dirname + '/blank.html');
+});
+
+app.post('/apireqpost/post.stf', function(req, res) {
+	res.cookie('website', req.body.website);
+	res.send();
+>>>>>>> 7bffeaf1c54da9083d205f0f95ac7396e33a55f8
 });
 
 app.get('/apireqget/get.stf', function(req, res) {
@@ -97,6 +106,7 @@ app.get('/goodbye.html', function(req, res) {
 
 app.post('/apisubmit', function(req, res) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   var url = req.cookies.website;
   var id = new ObjectID(req.cookies.apitycID);
   var queries = req.body;
@@ -112,6 +122,24 @@ app.post('/apisubmit', function(req, res) {
 
   res.cookie('apitycID', 'null');
   res.send(id);
+=======
+	console.log('getting to apisumbit');
+	var url = req.cookies.website;
+	var id = new ObjectID(req.cookies.apitycID);
+	var queries = req.body;
+
+
+
+	MongoClient(function(err, db) {
+		db.collection('apiCollection').updateOne({_id: id}, { $set: { url: url, queries: queries}}, function(err, result) {
+			console.log('updated queries', queries);
+			db.close();
+		});
+	});
+
+	res.cookie('apitycID', 'null');
+	res.send(id);
+>>>>>>> 7bffeaf1c54da9083d205f0f95ac7396e33a55f8
 
 });
 
@@ -120,6 +148,7 @@ app.get('/api/:id', function(req, res) {
 	var id = new ObjectID(req.params.id);
   // console.log('grabbed', id);
   //get data from mongodb
+
   MongoClient(function(err, db) {
     db.collection('apiCollection').findOne({_id: id}, function(err, result) {
        console.log('found user', result);
