@@ -32,8 +32,6 @@ $(document).ready(function() {
 
           $('#api-window').contents().click(function(e) {
             e.preventDefault();
-            console.log("all stuff: ", e);
-            console.log('e.target ', e.target);
             var results = [];
             var tempTarget = e.target
 
@@ -41,67 +39,82 @@ $(document).ready(function() {
               results.push(tempTarget.parentNode);
               tempTarget = tempTarget.parentNode;
             }
-            console.log("results 0: ", results[0]);
-            console.log("results Array: ", results);
-            var temp = results.splice(0, 1);
-            console.log("temp: ", temp);
-            console.log("spliced results: ", results);
-            // console.log(temp[0].textContent);
-            console.log(results)
-            var ancestryChain = '';
+            // var temp = results.splice(0, 1);
+            var ancestryChain = "";
             for (var i = (results.length - 4); i > 0; i--) {
-              // ancestryChain = ancestryChain.(results[i].nodeName)
               ancestryChain += results[i].nodeName + ' ';
             }
-            // ancestryChain = ancestryChain.find(temp[0].nodeName)
-            // ancestryChain.selector.val();
-            console.log(ancestryChain.toLowerCase());
-            selFunc = outputView.genOutput(e.target);
-            selFunc('current');
-            $('#guiSelector').remove();
-            $('#dropDownMenu').remove();
-            gui.buildGUI(selFunc('current'));
-            outputView.onAttr(selFunc, '#guiDropDown');
+
+            ancestryChain = ancestryChain.toLowerCase();
+            console.log(ancestryChain);
+
+            var attributes = [];
+            for (var i = 0; i < e.target.attributes.length; i++) {
+              attributes.push(e.target.attributes[i]);
+            };
+            console.log(attributes);
+            gui.buildGUI(attributes);
+
+            var mainArray = [];
+            var tempObj = {};
+            tempObj.name = $('#propName').val();
+            tempObj.string = ancestryChain;
+            tempObj.text = ($('#guiDropDown').val() === 'text');
+            tempObj.attr = $('#guiDropDown').val();
+
+            $('#addObj').click((e) => {
+              e.preventDefault();
+              mainArray.push(tmpObj);
+              tmpObj = {};
+              ancestryChain = "";
+            });
+
+            // selFunc = outputView.genOutput(e.target);
+            // selFunc('current');
+            // $('#guiSelector').remove();
+            // $('#dropDownMenu').remove();
+            // gui.buildGUI(selFunc('current'));
+            // outputView.onAttr(selFunc, '#guiDropDown');
 
             // create the initial highlight function when first element is selected
-            if (highlight) highlight(null, 'clear');
-            highlight = cssHighlight();
-            highlight(selFunc('current'), 'initial');
+            // if (highlight) highlight(null, 'clear');
+            // highlight = cssHighlight();
+            // highlight(selFunc('current'), 'initial');
 
-            $('#shorten').click((e) => {
-              e.preventDefault();
-              outputView.onShorten(selFunc);
-              highlight(selFunc('current'), 'shorten');
-              const attrSelect = $('#guiDropDown').val();
-              gui.buildDropDown(selFunc('current'));
-              $('#guiDropDown').val(attrSelect)
-              outputView.onAttr(selFunc, '#guiDropDown');
-            });
+            // $('#shorten').click((e) => {
+            //   e.preventDefault();
+            //   outputView.onShorten(selFunc);
+            //   highlight(selFunc('current'), 'shorten');
+            //   const attrSelect = $('#guiDropDown').val();
+            //   gui.buildDropDown(selFunc('current'));
+            //   $('#guiDropDown').val(attrSelect)
+            //   outputView.onAttr(selFunc, '#guiDropDown');
+            // });
 
-            $('#lengthen').click((e) => {
-              e.preventDefault();
-              outputView.onLengthen(selFunc);
-              highlight(selFunc('current'), 'lengthen');
-              const attrSelect = $('#guiDropDown').val();
-              gui.buildDropDown(selFunc('current'));
-              $('#guiDropDown').val(attrSelect)
-              outputView.onAttr(selFunc, '#guiDropDown');
-            });
+            // $('#lengthen').click((e) => {
+            //   e.preventDefault();
+            //   outputView.onLengthen(selFunc);
+            //   highlight(selFunc('current'), 'lengthen');
+            //   const attrSelect = $('#guiDropDown').val();
+            //   gui.buildDropDown(selFunc('current'));
+            //   $('#guiDropDown').val(attrSelect)
+            //   outputView.onAttr(selFunc, '#guiDropDown');
+            // });
 
 
             $('#guiSelector').submit((e) => {
               e.preventDefault();
-              var body = {};
-              body.name = $('#propName').val();
-              body.string = ancestryChain;
-              body.text = ($('#guiDropDown').val() === 'text');
-              body.attr = $('#guiDropDown').val();
-              console.log("This is the body: ", body);
+              // var mainArray = {};
+              // mainArray.name = $('#propName').val();
+              // mainArray.string = nestedArr;
+              // mainArray.text = ($('#guiDropDown').val() === 'text');
+              // mainArray.attr = $('#guiDropDown').val();
+              // console.log("This is the mainArray: ", mainArray);
 
               $.ajax({
                 type: 'POST',
                 url: '/apisubmit',
-                data: body,
+                data: mainArray,
 
                 success: function(data) {
                   console.log('data is', data);

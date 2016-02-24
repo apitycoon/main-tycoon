@@ -1,28 +1,27 @@
 var $ = require('jquery');
 
-function buildGUI(str) {
+function buildGUI(attrArr) {
 
   $('#gui').append(`<form id="guiSelector">
     <input id="propName" type='text' placeholder='Name of Property' name='propName'/><br/>
     <button id = "shorten"> More </button>
     <button id = "lengthen"> Less </button>
+    <button id = "addObj"> Add Element </button>
     <input type="submit">
     </form>
     <div id="dropDownMenu"></div>
   `)
 
-  buildDropDown(str);
-}
-
-function buildDropDown(str) {
+//   buildDropDown(attrArr);
+// }
+//
+// function buildDropDown(attrArr) {
   $('#guiDropDown').remove();
 
-  const jqueryString = "$('#api-window').contents().find('" + str + "')";
-  var query = jqueryString + '.get(0).attributes'
-  var attributes = eval(query);
+  const jqueryString = "$('#api-window').contents().find('" + attrArr[0] + "')";
   var attObj = {};
-  for (var i = 0; i < attributes.length; i++) {
-    attObj[attributes[i].nodeName] = attributes[i].nodeValue;
+  for (var i = 0; i < attrArr.length; i++) {
+    attObj[attrArr[i].name] = attrArr[i].value;
   }
 
   // var textQuery = jqueryString + '.text()';
@@ -42,5 +41,5 @@ function buildDropDown(str) {
 }
 module.exports = {
   buildGUI:buildGUI,
-  buildDropDown: buildDropDown
+  // buildDropDown: buildDropDown
 }

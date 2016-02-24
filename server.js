@@ -53,7 +53,6 @@ app.post('/apireqpost/post.stf', function(req, res, next) {
 });
 
 app.get('/apireqget/get.stf', function(req, res, next) {
-  // console.log(req.cookies.website);
 
   phantom.create().then(function(ph) {
      ph.createPage().then(function(page) {
@@ -97,9 +96,7 @@ app.get('/goodbye.html', function(req, res) {
 app.post('/apisubmit', function(req, res) {
   var url = req.cookies.website;
   var id = new ObjectID(req.cookies.apitycID);
-  var queries = req.body;
-
-
+  var queries = req.mainArray;
 
   MongoClient(function(err, db) {
     db.collection('apiCollection').updateOne({_id: id}, { $set: { url: url, queries: queries}}, function(err, result) {
@@ -122,6 +119,7 @@ app.get('/api/:id', function(req, res) {
       // console.log('found user', result);
       var url = result.url;
       var queries = result.queries;
+      console.log(queries);
       cheerio.getData(url, [queries]).then(function(data) {
         console.log("tracing data:", data);
         res.send(data);
