@@ -15,22 +15,6 @@ const trgElem = '#api-window';
 // make post request but don't reload page
 $(document).ready(function() {
 
-  $('#submit-post').on('click', function(e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: 'apitest/',
-      type: 'POST',
-      data: {
-        data: selFunc('current'),
-        url: $('#api-location').val()
-      },
-      success: function(data) {
-        alert(data);
-      }
-    })
-  })
-
   $('#api-prevent').on('click', function(e) {
     e.preventDefault();
     $('#api-window').remove();
@@ -48,7 +32,30 @@ $(document).ready(function() {
 
           $('#api-window').contents().click(function(e) {
             e.preventDefault();
+            console.log("all stuff: ", e);
+            console.log('e.target ', e.target);
+            var results = [];
+            var tempTarget = e.target
 
+            while (tempTarget) {
+              results.push(tempTarget.parentNode);
+              tempTarget = tempTarget.parentNode;
+            }
+            console.log("results 0: ", results[0]);
+            console.log("results Array: ", results);
+            var temp = results.splice(0, 1);
+            console.log("temp: ", temp);
+            console.log("spliced results: ", results);
+            // console.log(temp[0].textContent);
+            console.log(results)
+            var ancestryChain = '';
+            for (var i = (results.length - 4); i > 0; i--) {
+              // ancestryChain = ancestryChain.(results[i].nodeName)
+              ancestryChain += results[i].nodeName + ' ';
+            }
+            // ancestryChain = ancestryChain.find(temp[0].nodeName)
+            // ancestryChain.selector.val();
+            console.log(ancestryChain.toLowerCase());
             selFunc = outputView.genOutput(e.target);
             selFunc('current');
             $('#guiSelector').remove();
@@ -86,9 +93,10 @@ $(document).ready(function() {
               e.preventDefault();
               var body = {};
               body.name = $('#propName').val();
-              body.string = selFunc('current');
+              body.string = ancestryChain;
               body.text = ($('#guiDropDown').val() === 'text');
               body.attr = $('#guiDropDown').val();
+              console.log("This is the body: ", body);
 
               $.ajax({
                 type: 'POST',
@@ -106,10 +114,10 @@ $(document).ready(function() {
                   }, 500);
                 }
               });
-            })
-          })
+            });
+          });
         });
       }
-    })
-  })
-})
+    });
+  });
+});
