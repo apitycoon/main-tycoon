@@ -1,6 +1,9 @@
 const $ = require('cheerio');
-const rp = require('request-promise');
+//const rp = require('request-promise');
 //rp is dependent on request and bluebird
+const request = require('request');
+const _ = require('highland');
+
 
 // getData accepts a base url and an array of query objects
 // the function returns a promise
@@ -13,7 +16,7 @@ var cheerio = {
 			transform: body => $.load(body)
 		};
 
-		const data = rp(options)
+		const data = request(url).pipe()
 			.then($ => {
 				const result = [];
 				queries.forEach(query => {
