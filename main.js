@@ -1,7 +1,5 @@
 // add require dependencies
-const outputView = require('./controllers/outputView.js');
-const stringHandler = require('./controllers/stringHandler.js');
-const cssHighlight = require('./controllers/cssHighlight.js');
+// const cssHighlight = require('./controllers/cssHighlight.js');
 const gui = require('./controllers/gui.js')
 
 const $ = require('jquery');
@@ -22,99 +20,75 @@ $(document).ready(function() {
     $.ajax({
       url: 'apireqpost/post.stf',
       type: 'POST',
-      data: {
+      contentType: 'application/json',
+      data: JSON.stringify({
         website: $('#api-location').val()
-      },
+      }),
       success: function(data) {
         $('#window-container').append('<iframe id="api-window" class="container" width="100%" height="900px" src="/apireqget/get.stf" name="iframe_a"></iframe>')
+
+        let mainArray = [];
 
         $('#api-window').load(function() {
 
           $('#api-window').contents().click(function(e) {
             e.preventDefault();
-            var results = [];
-            var tempTarget = e.target
+
+            let results = [];
+            let tempTarget = e.target
 
             while (tempTarget) {
               results.push(tempTarget.parentNode);
               tempTarget = tempTarget.parentNode;
             }
-            // var temp = results.splice(0, 1);
-            var ancestryChain = "";
-            for (var i = (results.length - 4); i > 0; i--) {
+
+            let ancestryChain = "";
+            for (let i = (results.length - 4); i > 0; i--) {
               ancestryChain += results[i].nodeName + ' ';
             }
 
             ancestryChain = ancestryChain.toLowerCase();
-            console.log(ancestryChain);
+            console.log("ancestryChain:", ancestryChain);
 
-            var attributes = [];
-            for (var i = 0; i < e.target.attributes.length; i++) {
+            let attributes = [];
+            for (let i = 0; i < e.target.attributes.length; i++) {
               attributes.push(e.target.attributes[i]);
-            };
-            console.log(attributes);
+            }
+            console.log("attributes:", attributes);
+            attributes.unshift({name: "text"})
             gui.buildGUI(attributes);
 
-            var mainArray = [];
-            var tempObj = {};
-            tempObj.name = $('#propName').val();
-            tempObj.string = ancestryChain;
-            tempObj.text = ($('#guiDropDown').val() === 'text');
-            tempObj.attr = $('#guiDropDown').val();
-
+            // when you click the add element button
             $('#addObj').click((e) => {
               e.preventDefault();
-              mainArray.push(tmpObj);
-              tmpObj = {};
+              let indivObj = {};
+              let indivAttr = $('#guiDropDown').val();
+                indivObj.string = ancestryChain;
+                indivObj.name = $('#propName').val() || indivAttr;
+                indivObj.attr = indivAttr;
+                indivObj.text = e.target.textContent || "";
+
+              console.log("main array before: ", mainArray);
+              mainArray.push(indivObj);
+
+              console.log("mainArray after:", mainArray);
+
+              indivObj = {};
               ancestryChain = "";
+
+              for (var i = 0; i < mainArray.length; i++) {
+                  $('#gui-bottom').append("<p><strong>" + mainArray[i].indivAttr + "</strong></p>");
+              }
             });
-
-            // selFunc = outputView.genOutput(e.target);
-            // selFunc('current');
-            // $('#guiSelector').remove();
-            // $('#dropDownMenu').remove();
-            // gui.buildGUI(selFunc('current'));
-            // outputView.onAttr(selFunc, '#guiDropDown');
-
-            // create the initial highlight function when first element is selected
-            // if (highlight) highlight(null, 'clear');
-            // highlight = cssHighlight();
-            // highlight(selFunc('current'), 'initial');
-
-            // $('#shorten').click((e) => {
-            //   e.preventDefault();
-            //   outputView.onShorten(selFunc);
-            //   highlight(selFunc('current'), 'shorten');
-            //   const attrSelect = $('#guiDropDown').val();
-            //   gui.buildDropDown(selFunc('current'));
-            //   $('#guiDropDown').val(attrSelect)
-            //   outputView.onAttr(selFunc, '#guiDropDown');
-            // });
-
-            // $('#lengthen').click((e) => {
-            //   e.preventDefault();
-            //   outputView.onLengthen(selFunc);
-            //   highlight(selFunc('current'), 'lengthen');
-            //   const attrSelect = $('#guiDropDown').val();
-            //   gui.buildDropDown(selFunc('current'));
-            //   $('#guiDropDown').val(attrSelect)
-            //   outputView.onAttr(selFunc, '#guiDropDown');
-            // });
-
 
             $('#guiSelector').submit((e) => {
               e.preventDefault();
-              // var mainArray = {};
-              // mainArray.name = $('#propName').val();
-              // mainArray.string = nestedArr;
-              // mainArray.text = ($('#guiDropDown').val() === 'text');
-              // mainArray.attr = $('#guiDropDown').val();
-              // console.log("This is the mainArray: ", mainArray);
-
+              console.log("mainArray before AJAX Post: ", mainArray);
               $.ajax({
                 type: 'POST',
                 url: '/apisubmit',
-                data: mainArray,
+                contentType: 'application/json',
+                data: JSON.stringify(mainArray),
 
                 success: function(data) {
                   console.log('data is', data);

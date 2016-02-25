@@ -7,7 +7,8 @@ const rp = require('request-promise');
 var cheerio = {
 	getData: function (url, queries) {
 
-	console.log("inside GetData:", queries);
+
+	console.log("inside cherrio's GetData:", queries);
 	// test for bad url
 		const options = {
 			uri: url,
@@ -17,8 +18,10 @@ var cheerio = {
 		const data = rp(options)
 			.then($ => {
 				const result = [];
+				// queries = JSON.parse(queries);
+				console.log(Array.isArray(queries));
 				queries.forEach(query => {
-					console.log(query);
+					console.log("this is a query in cheerio:", query);
 					result[query.name] = [];
 					//add error handling for bad query.string
 					$(query.string).each((i, elem) => {
