@@ -10,9 +10,7 @@ var cheerio = require('./controllers/cheerio');
 
 var app = express();
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.json());
 
 
 app.get('/', function(req, res, next) {
@@ -47,30 +45,12 @@ app.get('/blank.html', function(req, res) {
   res.sendFile(__dirname + '/blank.html');
 })
 
-app.post('/apitest', function(req, res) {
-  var string = req.body.data;
-  var url = req.body.url;
-
-  var temp = {};
-
-  temp.name = 'test';
-  temp.string = string;
-  temp.text = true;
-  temp.attr = '';
-
-  cheerio(url, [temp]).then(function(data) {
-    res.send(JSON.stringify(data));
-  });
-
-});
-
 app.post('/apireqpost/post.stf', function(req, res, next) {
     res.cookie('website', req.body.website);
     res.send();
 });
 
 app.get('/apireqget/get.stf', function(req, res, next) {
-  // console.log(req.cookies.website);
 
   phantom.create().then(function(ph) {
      ph.createPage().then(function(page) {
@@ -115,22 +95,23 @@ app.post('/apisubmit', function(req, res) {
   var url = req.cookies.website;
   var id = new ObjectID(req.cookies.apitycID);
   var queries = req.body;
-  
-  
-  
+  console.log("this is the req:", req.body);
+
+
   MongoClient(function(err, db) {
     db.collection('apiCollection').updateOne({_id: id}, { $set: { url: url, queries: queries}}, function(err, result) {
       // console.log('updated result', result);
       db.close();
     });
   });
-  
+
   res.cookie('apitycID', 'null');
   res.send(id);
-  
+
 });
 
 app.get('/api/:id', function(req, res) {
+  console.log("this is the params:", req.params.id);
   var id = new ObjectID(req.params.id);
   // console.log('grabbed', id);
   //get data from mongodb
@@ -139,8 +120,10 @@ app.get('/api/:id', function(req, res) {
       // console.log('found user', result);
       var url = result.url;
       var queries = result.queries;
-      cheerio(url, [queries]).then(function(data) {
-        // console.log(data);
+      console.log("This is about to get passed into cheerio:", queries);
+
+      cheerio.getData(url, queries).then(function(data) {
+        console.log("tracing data:", data);
         res.send(data);
       });
     });
