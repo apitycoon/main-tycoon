@@ -4,6 +4,7 @@ const rp = require('request-promise');
 
 // getData accepts a base url and an array of query objects
 // the function returns a promise
+
 var cheerio = {
 	getData: function (url, queries) {
 
@@ -42,7 +43,6 @@ var cheerio = {
 	    // crawling failed or cheerio choked
 		throw(err);
 	});
-
 		return data;
 	}
 
