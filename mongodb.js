@@ -1,7 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 
-MongoClient.connect('mongodb://apityc:qwerty5@ds037175.mongolab.com:37175/apityc5', function(err, db) {
-  db.createCollection('api-collection', { validator: 
+MongoClient.connect('mongodb://team-big-gulp:biggulp14@ds015478.mongolab.com:15478/big-gulp-api', function(err, db) {
+  db.createCollection('api-collection', { validator:
     { $or: {
       apiURL: { $type: 'string'},
       }
@@ -11,4 +11,4 @@ MongoClient.connect('mongodb://apityc:qwerty5@ds037175.mongolab.com:37175/apityc
   });
 });
 
-module.exports = MongoClient.connect.bind(null, 'mongodb://apityc:qwerty5@ds037175.mongolab.com:37175/apityc5');
+module.exports = MongoClient.connect.bind(null, 'mongodb://team-big-gulp:biggulp14@ds015478.mongolab.com:15478/big-gulp-api');
