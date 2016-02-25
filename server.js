@@ -140,13 +140,10 @@ app.post('/githubOAuth', githubOAuth.redirectToGithub);
 
 app.get('/getAccessToken', githubOAuth.getAccessToken, githubOAuth.getUserInfo);
 
-// app.get('*', function(req, res, next) {
-//   console.log(req)
-//   res.redirect(req.cookies.website + req.originalUrl);
-// });
-
-
-
+app.get('*', function(req, res, next) {
+  console.log(req)
+  res.redirect(req.cookies.website + req.originalUrl);
+});
 
 
 
