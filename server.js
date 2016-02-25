@@ -11,10 +11,8 @@ var githubOAuth = require('./GithubService/githubOAuth');
 
 var app = express();
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({
-	extended: true
-}));
 
+app.use(bodyParser.json());
 
 app.get('/', githubOAuth.isLoggedIn ,function(req, res) {
 	if (!req.cookies.apitycID || req.cookies.apitycID === 'null') {
@@ -52,8 +50,8 @@ app.post('/apireqpost/post.stf', function(req, res, next) {
     res.send();
 });
 
-app.get('/apireqget/get.stf', function(req, res) {
-  // console.log(req.cookies.website);
+
+app.get('/apireqget/get.stf', function(req, res, next) {
 
 	phantom.create().then(function(ph) {
 		ph.createPage().then(function(page) {
@@ -99,8 +97,6 @@ app.post('/apisubmit', function(req, res) {
   var id = new ObjectID(req.cookies.apitycID);
   var queries = req.body;
 
-  console.log('ID ID', id, 'url', url, req.body);
-
   MongoClient(function(err, db) {
     db.collection('apiCollection').updateOne({_id: id}, { $set: { url: url, queries: queries}}, function(err, result) {
       //console.log('updated result', result);
@@ -114,8 +110,9 @@ app.post('/apisubmit', function(req, res) {
 });
 
 app.get('/api/:id', function(req, res) {
-	console.log('getting to api ', req.url);
-	var id = new ObjectID(req.params.id);
+
+  console.log("this is the params:", req.params.id);
+  var id = new ObjectID(req.params.id);
   // console.log('grabbed', id);
   //get data from mongodb
 
@@ -124,8 +121,11 @@ app.get('/api/:id', function(req, res) {
        console.log('found user', result);
       var url = result.url;
       var queries = result.queries;
-      cheerio.getData(url, [queries]).then(function(data) {
-        // console.log(data);
+
+      console.log("This is about to get passed into cheerio:", queries);
+
+      cheerio.getData(url, queries).then(function(data) {
+        console.log("tracing data:", data);
         res.send(data);
       });
     });

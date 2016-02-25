@@ -5,27 +5,11 @@ const rp = require('request-promise');
 // getData accepts a base url and an array of query objects
 // the function returns a promise
 
-
-// app.get('/api/:id', function(req, res) {
-//   var id = new ObjectID(req.params.id);
-//   // console.log('grabbed', id);
-//   //get data from mongodb
-//   MongoClient(function(err, db) {
-//     db.collection('apiCollection').findOne({_id: id}, function(err, result) {
-//       // console.log('found user', result);
-//       var url = result.url;
-//       var queries = result.queries;
-//       cheerio(url, [queries]).then(function(data) {
-//         // console.log(data);
-//         res.send(data);
-//       });
-//     });
-//   });
-// })
-
 var cheerio = {
 	getData: function (url, queries) {
 
+
+	console.log("inside cherrio's GetData:", queries);
 	// test for bad url
 		const options = {
 			uri: url,
@@ -35,7 +19,10 @@ var cheerio = {
 		const data = rp(options)
 			.then($ => {
 				const result = [];
+				// queries = JSON.parse(queries);
+				console.log(Array.isArray(queries));
 				queries.forEach(query => {
+					console.log("this is a query in cheerio:", query);
 					result[query.name] = [];
 					//add error handling for bad query.string
 					$(query.string).each((i, elem) => {
@@ -56,11 +43,10 @@ var cheerio = {
 	    // crawling failed or cheerio choked
 		throw(err);
 	});
-
 		return data;
 	}
 
-}
+};
 
 // sample query objects
 // need to remove html & body elements from the fron of the string
