@@ -7,7 +7,7 @@ function buildGUI(attrArr) {
   $('#gui').append(`<form id="guiSelector">
     <input id="propName" type='text' placeholder='Name of Property' name='propName'/><br/>
     <button id = "addObj"> Add Element </button>
-    <input type="submit">
+    <input id="submitBtn" type="submit">
     </form>
     <div id="dropDownMenu"></div>
   `)
